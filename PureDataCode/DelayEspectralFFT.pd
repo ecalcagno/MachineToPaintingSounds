@@ -1,0 +1,172 @@
+#N canvas 215 140 820 483 12;
+#N canvas 596 22 1120 711 fft-analysis 0;
+#X obj 15 164 *~;
+#X obj 14 198 rfft~;
+#X obj 20 727 *~;
+#X obj 21 645 rifft~;
+#X obj 20 755 outlet~;
+#X obj 38 702 tabreceive~ hanning;
+#X obj 36 140 tabreceive~ hanning;
+#X obj 14 99 inlet~;
+#X obj 14 32 block~ 512 4;
+#X obj 49 228 delwrite~ ar2 10000;
+#X obj 14 256 delwrite~ ar1 10000;
+#X obj 21 318 tabreceive~ delay;
+#X obj 58 369 wrap~;
+#X obj 20 495 *~ 512;
+#X obj 21 524 /~ 44.1;
+#X obj 21 567 vd~ ar1;
+#X obj 90 567 vd~ ar2;
+#X text 183 137 Ventana;
+#X text 200 241 Escribimos ambos valores del delay espectral en dos
+buffers diferentes;
+#X text 149 308 Recibimos los delays de array para determinar la posición
+de lectura del buffer;
+#X text 101 369 Resto de modulo 1;
+#X text 60 418 Le sacamos el resto a cualquier numero para poder calcular
+el número de bin;
+#X obj 20 427 -~;
+#X text 162 566 Escribimos los buffers de delay;
+#X text 80 645 resintetizamos;
+#X text 186 702 hacemos un ventaneo final;
+#X obj 21 674 /~ 1024;
+#X text 85 674 normalizamos a 2 * block size;
+#X text 82 483 Cada bin tiene 512 samples de tamaño \, multiplicando
+sacamos el número de sample;
+#X text 87 523 Lo convertimos en ms dividiendolo por el sample rate
+;
+#X connect 0 0 1 0;
+#X connect 1 0 10 0;
+#X connect 1 1 9 0;
+#X connect 2 0 4 0;
+#X connect 3 0 26 0;
+#X connect 5 0 2 1;
+#X connect 6 0 0 1;
+#X connect 7 0 0 0;
+#X connect 11 0 12 0;
+#X connect 11 0 22 0;
+#X connect 12 0 22 1;
+#X connect 13 0 14 0;
+#X connect 14 0 15 0;
+#X connect 14 0 16 0;
+#X connect 15 0 3 0;
+#X connect 16 0 3 1;
+#X connect 22 0 13 0;
+#X connect 26 0 2 0;
+#X restore 22 338 pd fft-analysis;
+#N canvas 35 66 604 445 Hann-window 0;
+#N canvas 0 22 450 300 (subpatch) 0;
+#X array hanning 512 float 0;
+#X coords 0 1 511 0 200 120 1;
+#X restore 293 249 graph;
+#X msg 171 263 0;
+#X obj 65 312 osc~;
+#X obj 65 264 samplerate~;
+#X obj 65 335 *~ -0.5;
+#X obj 65 358 +~ 0.5;
+#X text 279 241 1;
+#X text 272 359 0;
+#X text 288 372 0;
+#X obj 65 288 / 512;
+#X obj 57 241 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
+-1;
+#X text 336 221 Hann window;
+#X text 113 310 period 512;
+#X text 90 215 recalculate Hann;
+#X text 125 230 window table;
+#X obj 57 146 loadbang;
+#X msg 79 179 \; pd dsp 1;
+#X text 40 27 The Hann window is now recomputed on 'loadbang' to make
+the file smaller (it doesn't have to be saved with the array.);
+#X text 474 375 511;
+#X obj 57 383 tabwrite~ hanning;
+#X connect 1 0 2 1;
+#X connect 2 0 4 0;
+#X connect 3 0 9 0;
+#X connect 4 0 5 0;
+#X connect 5 0 19 0;
+#X connect 9 0 2 0;
+#X connect 10 0 3 0;
+#X connect 10 0 1 0;
+#X connect 10 0 19 0;
+#X connect 15 0 10 0;
+#X connect 15 0 16 0;
+#X restore 160 392 pd Hann-window;
+#N canvas 0 22 454 304 (subpatch) 0;
+#X array delay 256 float 3;
+#A 0 210 210 210 210 210 210 210 210 210 210 210 210 210 210 210 210
+210 210 210 210 210 210 210 210 210 210 210 210 210 210 210 210 210
+210 210 210 210 210 210 210 210 210 210 210 210 210 210 210 210 210
+210 210 210 210 210 210 210 210 210 210 210 210 210 210 210 210 210
+210 210 210 210 210 210 210 210 210 210 210 210 210 210 210 210 210
+210 210 210 210 210 210 210 210 210 210 210 210 210 210 210 210 210
+210 210 210 210 210 210 210 210 210 210 210 210 210 210 210 210 210
+210 210 210 210 210 210 210 210 210 210 210 210 210 210 210 210 210
+210 210 210 210 210 210 210 210 210 210 210 210 210 210 210 210 210
+210 210 210 210 210 210 210 210 210 210 210 210 210 210 210 210 210
+210 210 210 210 210 210 210 210 210 210 210 210 210 210 210 210 210
+210 210 210 210 210 210 210 210 210 210 210 210 210 210 210 210 210
+210 210 210 210 210 210 210 210 210 210 210 210 210 210 210 210 210
+210 210 210 210 210 210 210 210 210 210 210 210 210 210 210 210 210
+210 210 210 210 210 210 210 210 210 210 210 210 210 210 210 210 210
+210 210;
+#X coords 0 215 256 1 512 60 1;
+#X restore 145 144 graph;
+#X msg 669 388 const \$1;
+#X floatatom 669 367 5 0 0 0 - - -;
+#X text 664 193 1;
+#X text 659 135 215;
+#X text 141 204 0;
+#X text 644 207 256;
+#X text 108 222 Hz:;
+#X text 141 223 0;
+#X text 633 226 22050;
+#X obj 669 412 s delay;
+#X msg 669 305 210;
+#X obj 669 273 loadbang;
+#X obj 22 8 inlet~;
+#X obj 28 393 outlet~;
+#X obj 574 49 inlet;
+#X obj 569 274 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X obj 569 345 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 381 316 counter;
+#X msg 372 266 0;
+#X floatatom 378 349 5 0 0 0 - - -;
+#X obj 278 292 r Ymano1;
+#X obj 366 392 tabwrite delay;
+#X obj 298 338 * 215;
+#X msg 403 279 256;
+#X obj 489 281 loadbang;
+#X obj 569 305 metro 20;
+#X obj 305 413 int;
+#X obj 322 383 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 473 371 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 473 345 r Xmano1;
+#X connect 0 0 16 0;
+#X connect 3 0 12 0;
+#X connect 4 0 3 0;
+#X connect 13 0 4 0;
+#X connect 14 0 13 0;
+#X connect 15 0 0 0;
+#X connect 17 0 13 0;
+#X connect 18 0 28 0;
+#X connect 20 0 22 0;
+#X connect 21 0 20 2;
+#X connect 22 0 24 1;
+#X connect 22 0 30 0;
+#X connect 23 0 25 0;
+#X connect 25 0 29 1;
+#X connect 26 0 20 4;
+#X connect 27 0 18 0;
+#X connect 27 0 26 0;
+#X connect 27 0 21 0;
+#X connect 28 0 19 0;
+#X connect 29 0 24 0;
+#X connect 30 0 29 0;
+#X connect 31 0 20 0;
+#X connect 32 0 31 0;
+#X coords 0 -1 1 1 600 150 2 100 100;
